@@ -1,0 +1,122 @@
+<Definitions>
+	<GameMaterialDefinition name="Brick">
+		<Visuals
+            albedo="Data/Images/angled-blocks-vegetation/angled-blocks-vegetation_albedo.png"
+            normal="Data/Images/angled-blocks-vegetation/angled-blocks-vegetation_normal-ogl.png"
+            ormh="Data/Images/angled-blocks-vegetation/angled-blocks-vegetation_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="Grass">
+		<Visuals
+            albedo="Data/Images/stylized-grass/stylized-grass_albedo.png"
+            normal="Data/Images/stylized-grass/stylized-grass_normal-ogl.png"
+            ormh="Data/Images/stylized-grass/stylized-grass_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="Sand">
+		<Visuals
+            albedo="Data/Images/wavy-sand/wavy-sand_albedo.png"
+            normal="Data/Images/wavy-sand/wavy-sand_normal-ogl.png"
+            ormh="Data/Images/wavy-sand/wavy-sand_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="Mud">
+		<Visuals
+            albedo="Data/Images/mud/mud_albedo.png"
+            normal="Data/Images/mud/mud_normal-ogl.png"
+            ormh="Data/Images/mud/mud_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="Lava">
+		<Visuals
+            albedo="Data/Images/columned-lava-rock/columned-lava-rock_albedo.png"
+            normal="Data/Images/columned-lava-rock/columned-lava-rock_normal-ogl.png"
+            ormh="Data/Images/columned-lava-rock/columned-lava-rock_ormh.png"
+            emissive="Data/Images/columned-lava-rock/columned-lava-rock_emissive.png"
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="Snow">
+		<Visuals
+            albedo="Data/Images/rock-snow-ice/rock-snow-ice_albedo.png"
+            normal="Data/Images/rock-snow-ice/rock-snow-ice_normal-ogl.png"
+            ormh="Data/Images/rock-snow-ice/rock-snow-ice_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="Wood">
+		<Visuals
+            albedo="Data/Images/light-tree-bark/light-tree-bark_albedo.png"
+            normal="Data/Images/light-tree-bark/light-tree-bark_normal-ogl.png"
+            ormh="Data/Images/light-tree-bark/light-tree-bark_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="Gold">
+		<Visuals
+            albedo="Data/Images/gold-nugget/gold-nugget_albedo.png"
+            normal="Data/Images/gold-nugget/gold-nugget_normal-ogl.png"
+            ormh="Data/Images/gold-nugget/gold-nugget_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="Obsidian">
+		<Visuals
+            albedo="Data/Images/obsidian/obsidian_albedo.png"
+            normal="Data/Images/obsidian/obsidian_normal-ogl.png"
+            ormh="Data/Images/obsidian/obsidian_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="SpaceshipPanel">
+		<Visuals
+            albedo="Data/Images/spaceship-panels/spaceship-panels_albedo.png"
+            normal="Data/Images/spaceship-panels/spaceship-panels_normal-ogl.png"
+            ormh="Data/Images/spaceship-panels/spaceship-panels_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="SulphuricRock">
+		<Visuals
+            albedo="Data/Images/sulphuric-rock/sulphuric-rock_albedo.png"
+            normal="Data/Images/sulphuric-rock/sulphuric-rock_normal-ogl.png"
+            ormh="Data/Images/sulphuric-rock/sulphuric-rock_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="0.0"
+        />
+	</GameMaterialDefinition>
+	<GameMaterialDefinition name="WhiteMarble">
+		<Visuals
+            albedo="Data/Images/white-marble/white-marble_albedo.png"
+            normal="Data/Images/white-marble/white-marble_normal-ogl.png"
+            ormh="Data/Images/white-marble/white-marble_ormh.png"
+            emissive=""
+            uvScale="4.0"
+            lowPolyLevel="1.0"
+        />
+	</GameMaterialDefinition>
+</Definitions>

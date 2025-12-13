@@ -1,0 +1,14 @@
+<SDFScene>
+    <SDFShape type="Sphere" fillMethod="DISTANCE_GRADIENT" materialID1="0" materialID2="1" uniformBlendValue="0.5" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-5" gradientMaxDist="-3">
+        <Transform position="256.000,200.000,256.000" rotation="0.000,0.000,0.000" scale="1"/>
+        <Properties radius="25"/>
+    </SDFShape>
+    <SDFShape type="Box" fillMethod="Z_AXIS_GRADIENT" materialID1="3" materialID2="4" uniformBlendValue="0" gradientMinZFactor="0.50099999" gradientMaxZFactor="0.75" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="256.000,350.000,256.000" rotation="0.000,0.000,0.000" scale="1"/>
+        <Properties halfExtents="16.000,16.000,8.000"/>
+    </SDFShape>
+    <SDFShape type="DensityCloud" fillMethod="UNIFORM_BLEND" materialID1="7" materialID2="0" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="256.000,256.000,256.000" rotation="0.000,0.000,0.000" scale="1"/>
+        <Properties filePath="Data/Models/rubber_toy.dcloud"/>
+    </SDFShape>
+</SDFScene>

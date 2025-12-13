@@ -1,0 +1,48 @@
+<Definitions>
+	
+	<ShipDefinition name="X-Wing" model = "Data/Models/Craft/Craft.xml">
+		<Physics topSpeed="20.0" secondsToTopSpeed="2.0" secondsToStop="1.5" lateralDragRate="5.0" turnRate="105.0"/>
+		<Visuals bodyHorizontalOffsetMultiplier="2.3">
+			<MidTransform	position="0.000,0.000,-0.8"		rotation="0.000,-2.86,0.000"/>
+			<LeftTransform	position="0.000,-0.8,-0.72"		rotation="0.000,-2.86,-40.00"/>
+			<RightTransform position="0.000,0.8,-0.72"		rotation="0.000,-2.86,40.00"/>
+			<UpTransform	position="0.000,0.000,-0.92"	rotation="0.000,-15.00,0.000"/>
+			<DownTransform	position="0.000,0.000,-0.75"	rotation="0.000,15.000,0.000"/>
+		</Visuals>
+		
+		<Camera minFOV="60.0" maxFOV="78.0" minCameraDist="2.55" maxCameraDist="3.3"> 	
+		</Camera>
+
+		<Cannons damage="0.16" fireInterval="0.10" speed="200.0" lifetime="0.5" explosionRadius="5.0">
+			<!-- float luminance = dot(rgb, vec3(0.2126, 0.7152, 0.0722)) -->
+			<Cannon offset="1.5,0.9,0.2"		color="255,100,100"		intensity="1.92"/>
+			<Cannon offset="1.5,-0.9,-0.2"		color="100,240,120"		intensity="1.26"/>
+			<Cannon offset="1.5,0.9,-0.2"		color="150,200,255"		intensity="1.32"/>
+			<Cannon offset="1.5,-0.9,0.2"		color="220,130,255"		intensity="1.62"/>
+		</Cannons>
+			
+		<AccelerationCurve>
+			<Point x="0.0" y="0.0"/>
+			<Point x="0.1" y="0.271"/>
+			<Point x="0.2" y="0.488"/>
+			<Point x="0.3" y="0.657"/>
+			<Point x="0.4" y="0.784"/>
+			<Point x="0.5" y="0.875"/>
+			<Point x="0.6" y="0.936"/>
+			<Point x="0.7" y="0.973"/>
+			<Point x="0.8" y="0.992"/>
+			<Point x="0.9" y="0.999"/>
+			<Point x="1.0" y="1.0"/>
+		</AccelerationCurve>
+		<DecelerationCurve>
+			<Point x="0.0" y="1.0"/>
+			<Point x="1.0" y="0.0"/>
+		</DecelerationCurve>
+	</ShipDefinition>
+	
+	
+</Definitions>
+	
+	
+	
+	

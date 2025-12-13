@@ -1,0 +1,9 @@
+<GameConfig
+	windowAspect="2"
+	windowFullscreen="false"
+	windowTitle="Terra Smasher"
+	fontName="RobotoMonoSemiBold128"
+	
+	gameMaterialDefinitionsPath="Data/Definitions/GameMaterialDefinitions_dds_linear.xml"
+	playerShipDefinitionPath="Data/Definitions/PlayerShipDefinition.xml"
+/>

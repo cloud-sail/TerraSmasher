@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Gameplay">
+      <UniqueIdentifier>{fc54b3fb-77fd-4b2b-93f5-bda69135f455}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{8ffe81cc-d04c-4c45-88a1-f01f75d63a3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{f25e29db-229d-477f-9bc8-2e29b4159b57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NotUsed">
+      <UniqueIdentifier>{fb925b1f-be67-4e61-9eed-ad2ac75b73b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{f5a6be8b-1158-4233-a70f-31e897d1883f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{2bd87155-f505-4318-9531-20aeee3e69f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{0404f49f-7932-4716-9adc-8b4fccaee253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XML">
+      <UniqueIdentifier>{867a48bf-2a2c-499f-94eb-08f590b2dfb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay\Ship">
+      <UniqueIdentifier>{74b453e7-f742-43ac-b422-0aada76660aa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCommon.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="IntGrid3.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeTables.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="SdfPrimitives.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Voxel.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelMesher.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DualContouring1.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="DualContouring2.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="NaiveSurfaceNets.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="Octree.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelOctree.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="DataChunk.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelBlockPool.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelWorld.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshChunk.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunkRenderManager.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="qef_simd.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTransform.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiUtils.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Main_Windows.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="SDF.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldCommon.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelBrush.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelBufferPool.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="GenerateMeshJob.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="DensityCloud.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="GameVertexUtils.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStructuredBuffer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMaterialDefinition.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="SpectatorCamera.cpp">
+      <Filter>NotUsed</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerShip.cpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipDefinition.cpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipTypes.cpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipBehaviors.cpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomEffect.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileSystem.cpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.hpp">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineBuildPreferences.hpp">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.hpp">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCommon.hpp">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="IntGrid3.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeTables.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="World.hpp">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="SdfPrimitives.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Voxel.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelMesher.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="NaiveSurfaceNets.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="DualContouring1.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="DualContouring2.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="Octree.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelOctree.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="DataChunk.hpp">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelBlockPool.hpp">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelWorld.hpp">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshChunk.hpp">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkRenderManager.hpp">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="qef_simd.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTransform.hpp">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiUtils.hpp">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="SDF.hpp">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldCommon.hpp">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelBrush.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelBufferPool.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="GenerateMeshJob.hpp">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeKey.hpp">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="DensityCloud.hpp">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="GameVertexUtils.hpp">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStructuredBuffer.hpp">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMaterialDefinition.hpp">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="SpectatorCamera.hpp">
+      <Filter>NotUsed</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerShip.hpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipDefinition.hpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipTypes.hpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipBehaviors.hpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomEffect.hpp">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.hpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileSystem.hpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\Run\Data\GameConfig.xml">
+      <Filter>Framework</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Scenes\ExampleScene.xml">
+      <Filter>Scenes</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\GameMaterialDefinitions_dds_linear.xml">
+      <Filter>XML</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\GameMaterialDefinitions_dds.xml">
+      <Filter>XML</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\GameMaterialDefinitions.xml">
+      <Filter>XML</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\ShipDefinitions.xml">
+      <Filter>Gameplay\Ship</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Models\Craft\Craft.xml">
+      <Filter>Gameplay\Ship</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\ReadMe.md">
+      <Filter>Core</Filter>
+    </None>
+  </ItemGroup>
+</Project>

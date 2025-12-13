@@ -1,0 +1,13 @@
+<StaticModelInfo
+	objFile = "Data/Models/Craft/Craft.obj"
+	shader = "Data/Shaders/BlinnPhong"
+	diffuseMap = "Data/Models/Craft/Craft_Diffuse.png"
+	normalMap = ""
+	specGlossEmitMap = ""
+	unitsPerMeter = "15"
+	x="forward"
+	y="left"
+	z="up"
+	frontCounterClockwise="true"
+	translation="0,0,0"
+/>
