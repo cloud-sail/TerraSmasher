@@ -1,0 +1,13 @@
+<StaticModelInfo
+    objFile = "Data/Models/Collectibles/lollipop.obj"
+    shader = "Data/Shaders/BlinnPhong"
+    diffuseMap = "Data/Models/Collectibles/lollipop_d.png"
+    normalMap = "Data/Models/Collectibles/lollipop_n.png"
+    specGlossEmitMap = ""
+    unitsPerMeter = "1"
+    x="forward"
+    y="left"
+    z="up"
+    frontCounterClockwise="true"
+    translation="0,0,-0.5"
+/>

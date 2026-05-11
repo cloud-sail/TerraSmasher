@@ -1,0 +1,13 @@
+<StaticModelInfo
+    objFile = "Data/Models/Collectibles/eight_ball.obj"
+    shader = "Data/Shaders/BlinnPhong"
+    diffuseMap = "Data/Models/Collectibles/eight_ball_d.jpg"
+    normalMap = ""
+    specGlossEmitMap = ""
+    unitsPerMeter = "1"
+    x="forward"
+    y="left"
+    z="up"
+    frontCounterClockwise="true"
+    translation="0,0,-0.5"
+/>

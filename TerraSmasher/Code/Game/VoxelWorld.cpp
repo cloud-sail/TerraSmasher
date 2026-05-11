@@ -3,6 +3,8 @@
 #include "Game/GameCommon.hpp"
 #include "Game/VoxelMesher.hpp"
 #include "Game/CubeTables.hpp"
+#include "Game/VoxelBreakSystem.hpp"
+#include "Game/GameMaterialDefinition.hpp"
 #include "Engine/Math/MathUtils.hpp"
 #include "Engine/Math/Plane3.hpp"
 
@@ -601,6 +603,270 @@ bool VoxelWorld::CarveWithSDF(SDF const* sdf, uint8_t deltaDensity, IntBox3& out
 
 	out_region = region;
 	return anyModified;
+}
+
+bool VoxelWorld::CarveWithSDFTracked(SDF const* sdf, uint8_t deltaDensity, IntBox3& out_region, std::vector<float>& out_materialVolumes)
+{
+	GUARANTEE_OR_DIE(sdf != nullptr, "SDF is null");
+
+	AABB3 worldAABB = sdf->GetAffectedAABB();
+	IntBox3 region = IntBox3::MakeFromAABB3(worldAABB);
+	region = VoxelWorldUtils::GetSafeWorldBoxRegion(region);
+
+	bool anyModified = false;
+
+	// Collect all modified voxel coordinates for batch cache invalidation
+	std::unordered_set<IntVec3> modifiedCoords;
+
+	IntVec3 regionMins = region.m_mins;
+	IntVec3 regionMaxs = region.m_mins + region.m_dimensions;
+
+	for (int z = regionMins.z; z < regionMaxs.z; ++z)
+	{
+		for (int y = regionMins.y; y < regionMaxs.y; ++y)
+		{
+			for (int x = regionMins.x; x < regionMaxs.x; ++x)
+			{
+				IntVec3 worldCoords(x, y, z);
+				Vec3 worldPos = VoxelWorldUtils::GetWorldVoxelCenterFromWorldVoxelCoords(worldCoords);
+
+				float signedDistance = sdf->GetSignedDistance(worldPos);
+				uint8_t brushDensity = Voxel::GetUint8DensityFromSignedDistance(signedDistance);
+
+				if (brushDensity == 0)
+				{
+					continue;
+				}
+
+				Voxel* voxelPtr = GetVoxelPtrIfAllocated(worldCoords);
+
+				if (!voxelPtr)
+				{
+					continue;
+				}
+
+				uint8_t oldDensity = voxelPtr->m_density;
+				uint8_t targetDensity = 255 - brushDensity;
+
+				if (oldDensity <= targetDensity) // also skip oldDensity == 0
+				{
+					continue;
+				}
+
+				uint8_t newDensity = (oldDensity > deltaDensity) ? (oldDensity - deltaDensity) : 0;
+				if (newDensity < targetDensity)
+				{
+					newDensity = targetDensity;
+				}
+
+				if (newDensity != oldDensity)
+				{
+					// Track per-material volume before modifying density
+					float densityReduction = Quantization::ToUNormFromUint8(oldDensity) - Quantization::ToUNormFromUint8(newDensity);
+					float blend = Quantization::ToUNormFromUint8(voxelPtr->m_blendValue);
+
+					uint8_t matID1 = voxelPtr->m_materialID1;
+					uint8_t matID2 = voxelPtr->m_materialID2;
+
+					if (matID1 < out_materialVolumes.size())
+					{
+						out_materialVolumes[matID1] += densityReduction * (1.0f - blend);
+					}
+					if (matID2 < out_materialVolumes.size())
+					{
+						out_materialVolumes[matID2] += densityReduction * blend;
+					}
+
+					voxelPtr->m_density = newDensity;
+					anyModified = true;
+
+					// Track modified coordinate for batch cache invalidation
+					modifiedCoords.insert(worldCoords);
+				}
+			}
+		}
+	}
+
+	// Batch invalidate LOD cache for all modified voxels
+	if (!modifiedCoords.empty())
+	{
+		InvalidateCacheForWorldCoordsSet(modifiedCoords);
+	}
+
+	out_region = region;
+	return anyModified;
+}
+
+StrikeResult VoxelWorld::StrikeWithSDFTracked(SDF const* sdf, StrikeContext const& ctx)
+{
+	GUARANTEE_OR_DIE(sdf != nullptr, "SDF is null");
+
+	StrikeResult result;
+	size_t matCount = GameMaterialDefinition::s_definitions.size();
+	result.materialVolumesRemoved.resize(matCount, 0.0f);
+	result.materialDamageAccumulated.resize(matCount, 0.0f);
+
+	AABB3   worldAABB = sdf->GetAffectedAABB();
+	IntBox3 region = IntBox3::MakeFromAABB3(worldAABB);
+	region = VoxelWorldUtils::GetSafeWorldBoxRegion(region);
+	result.affectedRegion = region;
+
+	IntVec3 regionMins = region.m_mins;
+	IntVec3 regionMaxs = region.m_mins + region.m_dimensions;
+
+	//-----------------------------------------------------------------------------------------------
+	// Pass 1
+	bool				triggerBreak = false;
+	ToughnessProfile	criterionProfile{ 0, 0 };
+
+	for (int z = regionMins.z; z < regionMaxs.z; ++z)
+	{
+		for (int y = regionMins.y; y < regionMaxs.y; ++y)
+		{
+			for (int x = regionMins.x; x < regionMaxs.x; ++x)
+			{
+				IntVec3 worldCoords(x, y, z);
+				Vec3    worldPos = VoxelWorldUtils::GetWorldVoxelCenterFromWorldVoxelCoords(worldCoords);
+
+				float signedDistance = sdf->GetSignedDistance(worldPos);
+				if (!Voxel::IsInAffectedRegion(signedDistance)) continue;
+
+				Voxel* voxelPtr = GetVoxelPtrIfAllocated(worldCoords);
+				if (!voxelPtr) continue;
+				if (voxelPtr->m_density == 0) continue;
+
+				ToughnessProfile profile = voxelPtr->GetToughnessProfile();
+
+				uint8_t damagePerHit = 0;
+				StrikeOutcome outcome = ComputeStrikeOutcome(profile, ctx, damagePerHit);
+
+				if (outcome == StrikeOutcome::Instant) 
+				{
+					triggerBreak = true;
+					if (criterionProfile.IsLessDurableThan(profile)) 
+					{
+						criterionProfile = profile;
+					}
+				}
+				else if (outcome == StrikeOutcome::Cumulative) 
+				{
+					if (Voxel::IsInDamageRegion(signedDistance)) 
+					{
+						uint8_t oldDamage = voxelPtr->m_damage;
+						int     newDamage = (int)oldDamage + (int)damagePerHit;
+						uint8_t clampedNewDamage = (uint8_t)std::min(newDamage, 255);
+
+						if (clampedNewDamage > oldDamage)
+						{
+							float damageDelta = Quantization::ToUNormFromUint8(clampedNewDamage - oldDamage);
+							float blend = Quantization::ToUNormFromUint8(voxelPtr->m_blendValue);
+							uint8_t matID1 = voxelPtr->m_materialID1;
+							uint8_t matID2 = voxelPtr->m_materialID2;
+							if (matID1 < matCount)
+								result.materialDamageAccumulated[matID1] += damageDelta * (1.0f - blend);
+							if (matID2 < matCount)
+								result.materialDamageAccumulated[matID2] += damageDelta * blend;
+
+							result.anyModified = true;
+						}
+
+						voxelPtr->m_damage = clampedNewDamage;
+
+						if (newDamage >= 255)
+						{
+							triggerBreak = true;
+							if (criterionProfile.IsLessDurableThan(profile))
+							{
+								criterionProfile = profile;
+							}
+						}
+					}
+					// Transition Region: do not apply damage
+				}
+
+				// Immune: do nothing
+			}
+		}
+	}
+
+	result.breakTriggered = triggerBreak;
+
+	if (!triggerBreak) 
+	{
+		return result;
+	}
+
+	//-----------------------------------------------------------------------------------------------
+	// Pass 2: decrease density
+	// Collect all modified voxel coordinates for batch cache invalidation
+	std::unordered_set<IntVec3> densityChangedCoords;
+
+	for (int z = regionMins.z; z < regionMaxs.z; ++z)
+	{
+		for (int y = regionMins.y; y < regionMaxs.y; ++y)
+		{
+			for (int x = regionMins.x; x < regionMaxs.x; ++x)
+			{
+				IntVec3 worldCoords(x, y, z);
+				Vec3 worldPos = VoxelWorldUtils::GetWorldVoxelCenterFromWorldVoxelCoords(worldCoords);
+
+				float signedDistance = sdf->GetSignedDistance(worldPos);
+				uint8_t brushDensity = Voxel::GetUint8DensityFromSignedDistance(signedDistance);
+				if (brushDensity == 0) continue;
+
+				Voxel* voxelPtr = GetVoxelPtrIfAllocated(worldCoords);
+				if (!voxelPtr) continue;
+				if (voxelPtr->m_density == 0) continue;
+
+				ToughnessProfile profile = voxelPtr->GetToughnessProfile();
+
+				uint8_t damagePerHit = 0;
+				StrikeOutcome outcome = ComputeStrikeOutcome(profile, ctx, damagePerHit);
+
+				if (outcome == StrikeOutcome::Immune) continue;
+				if (criterionProfile.IsLessDurableThan(profile)) continue;
+
+				uint8_t oldDensity = voxelPtr->m_density;
+				uint8_t targetDensity = 255 - brushDensity;
+
+				if (oldDensity <= targetDensity) // also skip oldDensity == 0
+				{
+					continue;
+				}
+
+				uint8_t newDensity = targetDensity;
+
+
+				float densityReduction = Quantization::ToUNormFromUint8(oldDensity) - Quantization::ToUNormFromUint8(newDensity);
+				float blend = Quantization::ToUNormFromUint8(voxelPtr->m_blendValue);
+				uint8_t matID1 = voxelPtr->m_materialID1;
+				uint8_t matID2 = voxelPtr->m_materialID2;
+
+				if (matID1 < result.materialVolumesRemoved.size())
+				{
+					result.materialVolumesRemoved[matID1] += densityReduction * (1.0f - blend);
+				}
+				if (matID2 < result.materialVolumesRemoved.size())
+				{
+					result.materialVolumesRemoved[matID2] += densityReduction * blend;
+				}
+
+				voxelPtr->m_density = newDensity;
+				result.anyModified = true;
+
+				// Track modified coordinate for batch cache invalidation
+				densityChangedCoords.insert(worldCoords);
+			}
+		}
+	}
+
+	// Batch invalidate LOD cache for all modified voxels
+	if (!densityChangedCoords.empty())
+	{
+		InvalidateCacheForWorldCoordsSet(densityChangedCoords);
+	}
+
+	return result;
 }
 
 bool VoxelWorld::FlattenToPlane(SDF const* sdf, Plane3 const& plane, uint8_t deltaDensity, uint8_t matID1, uint8_t matID2, uint8_t blendValue, IntBox3& out_region)

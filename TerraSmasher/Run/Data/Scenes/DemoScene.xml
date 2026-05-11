@@ -43,4 +43,8 @@
         <Transform position="135.400,293.000,256.000" rotation="0.000,0.000,0.000" scale="1"/>
         <Properties filePath="Data\Models\goblin.dcloud"/>
     </SDFShape>
+    <SDFShape type="DensityCloud" fillMethod="UNIFORM_BLEND" materialID1="7" materialID2="0" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="170.500,154.500,219.100" rotation="0.000,0.000,0.000" scale="1"/>
+        <Properties filePath="Data\Models\bunny.dcloud"/>
+    </SDFShape>
 </SDFScene>

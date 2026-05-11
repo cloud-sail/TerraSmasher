@@ -91,8 +91,11 @@ void App::Startup()
 
 	DebugRenderConfig debugRenderConfig;
 	debugRenderConfig.m_renderer = g_theRenderer;
-	debugRenderConfig.m_messageCellHeight = 15.f;
-	debugRenderConfig.m_messageAspectRatio = 0.75f;
+	debugRenderConfig.m_messageCellHeight = 20.f;
+	debugRenderConfig.m_messageAspectRatio = 0.5f;
+	debugRenderConfig.m_messageShadowOffsetRatio = 0.055f;
+	debugRenderConfig.m_messageMarginRatio = 0.05f;
+	debugRenderConfig.m_fontName = g_gameConfigBlackboard.GetValue("fontName", devConsoleConfig.m_fontName);
 
 	// Start up all Engine subsystems
 	g_theEventSystem->Startup();

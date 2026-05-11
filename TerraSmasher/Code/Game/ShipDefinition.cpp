@@ -96,6 +96,15 @@ bool ShipDefinition::LoadFromXmlElement(XmlElement const& element)
 			m_secondsToStop		= ParseXmlAttribute(*physicsElement, "secondsToStop", m_secondsToStop);
 			m_lateralDragRate	= ParseXmlAttribute(*physicsElement, "lateralDragRate", m_lateralDragRate);
 			m_turnRate			= ParseXmlAttribute(*physicsElement, "turnRate", m_turnRate);
+
+			m_collisionRadius = ParseXmlAttribute(*physicsElement, "collisionRadius", m_collisionRadius);
+			m_collisionBounceCoefficient = ParseXmlAttribute(*physicsElement, "bounceCoefficient", m_collisionBounceCoefficient);
+			m_collisionFrictionCoefficient = ParseXmlAttribute(*physicsElement, "frictionCoefficient", m_collisionFrictionCoefficient);
+
+			m_barrelRollDuration = ParseXmlAttribute(*physicsElement, "barrelRollDuration", m_barrelRollDuration);
+			m_barrelRollCooldown = ParseXmlAttribute(*physicsElement, "barrelRollCooldown", m_barrelRollCooldown);
+			m_barrelRollBodyOffset = ParseXmlAttribute(*physicsElement, "barrelRollBodyOffset", m_barrelRollBodyOffset);
+			m_barrelRollLateralSpeed = ParseXmlAttribute(*physicsElement, "barrelRollLateralSpeed", m_barrelRollLateralSpeed);
 		}
 	}
 
@@ -267,6 +276,18 @@ bool ShipDefinition::LoadFromXmlElement(XmlElement const& element)
 		}
 	}
 
+	// Sonar
+	{
+		XmlElement const* sonarElement = element.FirstChildElement("Sonar");
+
+		if (sonarElement)
+		{
+			m_sonarColor		= ParseXmlAttribute(*sonarElement, "color", m_sonarColor);
+			m_sonarMaxRadius	= ParseXmlAttribute(*sonarElement, "maxRadius", m_sonarMaxRadius);
+			m_sonarScanDuration = ParseXmlAttribute(*sonarElement, "scanDuration", m_sonarScanDuration);
+			m_sonarScanInterval = ParseXmlAttribute(*sonarElement, "scanInterval", m_sonarScanInterval);
+		}
+	}
 
 	return true;
 }

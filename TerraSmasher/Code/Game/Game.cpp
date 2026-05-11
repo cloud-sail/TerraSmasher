@@ -142,6 +142,11 @@ float Game::GetDeltaSeconds() const
 	return (float)m_clock->GetDeltaSeconds();
 }
 
+float Game::GetTotalSeconds() const
+{
+	return (float)m_clock->GetTotalSeconds();
+}
+
 int Game::GetFrameCount() const
 {
 	return m_clock->GetFrameCount();

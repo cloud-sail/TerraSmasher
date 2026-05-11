@@ -30,6 +30,9 @@ constexpr float INDICATOR_HEIGHT_RATIO = 0.024f;
 constexpr float THROTTLE_WIDTH_RATIO = 0.02f;
 constexpr float THROTTLE_HEIGHT_RATIO = 0.4f;
 
+constexpr float COLLISION_FLINCH_DEGREES = 85.f;
+constexpr float COLLISION_FLINCH_BLEND_OUT_SPEED = 3.f; // alpha units per second
+
 //-----------------------------------------------------------------------------------------------
 PlayerShip::PlayerShip(World* world, ShipSpawnInfo const& spawnInfo)
 	: m_world(world)
@@ -45,12 +48,13 @@ PlayerShip::PlayerShip(World* world, ShipSpawnInfo const& spawnInfo)
 	m_cameraFOV = m_definition->m_minCameraFOV;
 
 
-
+	m_timeSinceLastScan = m_definition->m_sonarScanDuration;
 }
 
 void PlayerShip::Update()
 {
 
+	UpdateDebugInput();
 
 	InputOutputParams params;
 	InitializeParams(params);
@@ -63,8 +67,6 @@ void PlayerShip::Update()
 	// Visual Rotation & Position
 	ShipBehavior::UpdateTargetBodyLocalPosition(params, *m_definition);
 	ShipBehavior::UpdateTargetBodyLocalRotation(params, *m_definition);
-
-	// Collision Check
 
 	// Camera parameter updates, Update game camera later
 	ShipBehavior::UpdateCameraDistance(params, *m_definition);
@@ -84,14 +86,40 @@ void PlayerShip::Update()
 	m_cameraDistance = params.m_cameraDistance;
 	m_cameraFOV = params.m_cameraFOV;
 
-	// Visual 
-	m_bodyLocalPosition = InterpTo(params.m_prevBodyLocalPosition, params.m_bodyTargetLocalPosition, params.m_deltaSeconds, BODY_POSITION_INTERP_SPEED);
-	m_bodyLocalRotation = InterpToNlerp(params.m_prevBodyLocalRotation, params.m_bodyTargetLocalRotation, params.m_deltaSeconds, BODY_ROTATION_INTERP_SPEED);
+	// Terrain Collision (after physics, uses ship model world center)
+	UpdateTerrainCollision(params);
 
+
+
+	// Collision additive rotation: modify target before interpolation
+	BlendOutCollisionAdditiveRotation(params);
+
+	// Barrel roll: modify target after collision additive, rotates around body-local forward
+	UpdateBarrelRoll(params);
+
+	// Visual Interpolation
+	//m_bodyLocalPosition = InterpTo(params.m_prevBodyLocalPosition, params.m_bodyTargetLocalPosition, params.m_deltaSeconds, BODY_POSITION_INTERP_SPEED);
+	//m_bodyLocalRotation = InterpToNlerp(params.m_prevBodyLocalRotation, params.m_bodyTargetLocalRotation, params.m_deltaSeconds, BODY_ROTATION_INTERP_SPEED);
+
+
+	// During barrel roll, directly assign rotation to avoid Nlerp shortest-path issue
+	// (accumulated roll angle can exceed 180 degrees, causing Nlerp to reverse direction)
+	if (m_isBarrelRolling)
+	{
+		//m_bodyLocalRotation = params.m_bodyTargetLocalRotation;
+		m_bodyLocalPosition = InterpTo(params.m_prevBodyLocalPosition, params.m_bodyTargetLocalPosition, params.m_deltaSeconds, BODY_POSITION_INTERP_SPEED * 1.5f);
+		m_bodyLocalRotation = InterpToNlerp(params.m_prevBodyLocalRotation, params.m_bodyTargetLocalRotation, params.m_deltaSeconds, BODY_ROTATION_INTERP_SPEED * 3.f);
+
+	}
+	else
+	{
+		m_bodyLocalPosition = InterpTo(params.m_prevBodyLocalPosition, params.m_bodyTargetLocalPosition, params.m_deltaSeconds, BODY_POSITION_INTERP_SPEED);
+		m_bodyLocalRotation = InterpToNlerp(params.m_prevBodyLocalRotation, params.m_bodyTargetLocalRotation, params.m_deltaSeconds, BODY_ROTATION_INTERP_SPEED);
+	}
 	//-----------------------------------------------------------------------------------------------
 	// After
-	// Fire?
 	UpdateFiring(params);
+	UpdateSonarScanning(params);
 }
 
 void PlayerShip::Render() const
@@ -214,7 +242,7 @@ void PlayerShip::RenderUI() const
 
 			DebugAddScreenText(Stringf("%3d m/s", (int)forwardSpeed),
 				makeSubRegion(SCREEN_BOUNDS, AABB2(Vec2(0.02f, 0.02f), Vec2(0.1f, 0.1f))),
-				40.f, Vec2(0.f, 0.5f), 0.f, 0.7f);
+				40.f, Vec2(0.f, 0.5f), 0.f, 0.55f);
 
 		}
 
@@ -330,6 +358,8 @@ void PlayerShip::InitializeParams(InputOutputParams& out_params) const
 	out_params.m_prevBodyLocalPosition = m_bodyLocalPosition;
 	out_params.m_prevBodyLocalRotation = m_bodyLocalRotation;
 
+	out_params.m_prevBodyWorldTransform = GetShipModelToWorldTransform();
+
 
 	out_params.m_linearVelocity = out_params.m_prevVelocity;
 	// Redundant Code
@@ -414,6 +444,23 @@ void PlayerShip::UpdateInput(InputOutputParams& io_params)
 			m_isRollingToHorizon = true;
 		}
 
+		// Barrel Roll
+		if (!m_isBarrelRolling && m_barrelRollCooldownTimer <= 0.f)
+		{
+			if (g_theInput->WasKeyJustPressed(KEYCODE_A))
+			{
+				m_isBarrelRolling = true;
+				m_barrelRollTotalAngle = -360.f;
+				m_barrelRollElapsedTime = 0.f;
+			}
+			else if (g_theInput->WasKeyJustPressed(KEYCODE_D))
+			{
+				m_isBarrelRolling = true;
+				m_barrelRollTotalAngle = 360.f;
+				m_barrelRollElapsedTime = 0.f;
+			}
+		}
+
 		// Fire Input
 		isFireButtonDown = g_theInput->IsKeyDown(KEYCODE_LEFT_MOUSE);
 	}
@@ -421,10 +468,222 @@ void PlayerShip::UpdateInput(InputOutputParams& io_params)
 
 	io_params.m_throttleInput = m_throttleInput;
 	io_params.m_rotationInput = rotationInput;
+	m_rotationInput = rotationInput; // persist for external readers (HUD tilt, etc.)
 
 	io_params.m_angularVelocity = io_params.m_rotationInput * m_definition->m_turnRate;
 
 	io_params.m_isFiring = isFireButtonDown;
+}
+
+void PlayerShip::UpdateTerrainCollision(InputOutputParams& io_params)
+{
+	constexpr float MIN_DISPLACEMENT_THRESHOLD = 0.001f;
+
+	float collisionRadius = m_definition->m_collisionRadius;
+
+	Mat44 shipToWorld = GetShipModelToWorldTransform();
+	Vec3 currentShipWorldPos = shipToWorld.GetTranslation3D();
+
+	Vec3 preShipWorldPos = io_params.m_prevBodyWorldTransform.GetTranslation3D();
+
+	Vec3 displacement = currentShipWorldPos - preShipWorldPos;
+	float displacementLength = displacement.GetLength();
+
+	if (displacementLength < MIN_DISPLACEMENT_THRESHOLD)
+	{
+		return;
+	}
+
+	Vec3 moveDir = displacement / displacementLength;
+
+	Mat44 moveBasis = Mat44::MakeFromX(moveDir);
+	Vec3 basisI = moveBasis.GetIBasis3D(); // forward
+	Vec3 basisJ = moveBasis.GetJBasis3D(); // left
+	Vec3 basisK = moveBasis.GetKBasis3D(); // up
+
+	// 5 sample points on the front hemisphere of the sphere (in movement-aligned coords)
+	// Center, and 4 points at -30 deg from forward (cos30=0.866, sin30=0.5)
+	constexpr int NUM_RAYS = 5;
+	Vec3 localOffsets[NUM_RAYS] =
+	{
+		Vec3(0.f, 0.f, 0.f),                          // center
+		Vec3(-0.5f,  0.866025f, 0.f),                 // left-back
+		Vec3(-0.5f, -0.866025f, 0.f),                 // right-back
+		Vec3(-0.5f, 0.f,  0.866025f),                 // up-back
+		Vec3(-0.5f, 0.f, -0.866025f),                 // down-back
+	};
+
+	float rayLength = collisionRadius + displacementLength;
+
+	// Find closest impact among the 5 rays
+	bool anyHit = false;
+	float closestImpactDist = rayLength;
+	Vec3 closestImpactNormal;
+	Vec3 closestImpactPos;
+
+	for (int i = 0; i < NUM_RAYS; ++i)
+	{
+		// Convert local offset to world offset: offset is in (I, J, K) basis, scaled by radius
+		Vec3 worldOffset = (basisI * localOffsets[i].x + basisJ * localOffsets[i].y + basisK * localOffsets[i].z) * collisionRadius;
+		Vec3 rayStart = currentShipWorldPos + worldOffset;
+
+		VoxelRaycastResult3D result = m_world->DoShipTrace(rayStart, moveDir, rayLength);
+
+		if (!result.m_didImpact)
+			continue;
+
+		// If impact distance is 0, the ray origin is already inside terrain - skip
+		if (result.m_impactDist <= 0.f)
+			continue;
+
+		if (result.m_impactDist < closestImpactDist)
+		{
+			closestImpactDist = result.m_impactDist;
+			closestImpactNormal = result.m_impactNormal;
+			closestImpactPos = result.m_impactPos;
+			anyHit = true;
+		}
+	}
+
+	if (!anyHit)
+	{
+		return;
+	}
+
+	// The ray length is R + displacementLength
+	// If impactDist < rayLength, the ship has penetrated the surface
+	// Penetration depth = rayLength - impactDist
+	float penetration = rayLength - closestImpactDist;
+	if (penetration <= 0.f)
+	{
+		return;
+	}
+
+	// Push the ship back along the movement direction by the penetration amount
+	Vec3 correction = moveDir * (-penetration);
+	m_controlFramePosition += correction;
+
+	// Velocity reflection: decompose velocity into normal and tangential components
+	Vec3 impactNormal = closestImpactNormal.GetNormalized();
+	float velocityAlongNormal = DotProduct3D(m_velocity, impactNormal);
+
+	// Only respond if moving into the surface (negative dot = moving towards)
+	if (velocityAlongNormal < 0.f)
+	{
+		Vec3 normalComponent = impactNormal * velocityAlongNormal;
+		Vec3 tangentialComponent = m_velocity - normalComponent;
+
+		// Bounce the normal component (flip and scale by bounce coefficient)
+		// Reduce the tangential component by friction
+		m_velocity = tangentialComponent * m_definition->m_collisionFrictionCoefficient
+			- normalComponent * m_definition->m_collisionBounceCoefficient;
+
+
+		// Hard collision: if normal impact speed exceeds 25% of top speed
+		float impactSeverity = fabsf(velocityAlongNormal) / m_definition->m_topSpeed;
+		if (impactSeverity > 0.25f)
+		{
+			m_throttleInput *= 0.1f;
+
+			Vec3 correctedShipWorldPos = GetShipModelToWorldTransform().GetTranslation3D();
+			ApplyCollisionAdditiveRotation(io_params, correctedShipWorldPos, closestImpactPos, impactNormal);
+			// #ToDo: trigger collision VFX / SFX / camera shake here
+		}
+	}
+}
+
+void PlayerShip::ApplyCollisionAdditiveRotation(InputOutputParams& io_params, Vec3 const& shipWorldPos, Vec3 const& impactPos, Vec3 const& impactNormal)
+{
+	UNUSED(io_params);
+	// Axis = cross(centerToImpact, impactNormal)
+	// This gives a rotation axis perpendicular to both, making the ship "flinch" away from the impact
+	Vec3 centerToImpact = (impactPos - shipWorldPos).GetNormalized();
+	Vec3 axis = CrossProduct3D(centerToImpact, impactNormal);
+
+	float axisLength = axis.GetLength();
+	if (axisLength < 0.001f)
+	{
+		// centerToImpact and impactNormal are nearly parallel, pick a fallback perpendicular axis
+		Vec3 forward = m_controlFrameRotation.RotateVector(Vec3::FORWARD).GetNormalized();
+		axis = CrossProduct3D(centerToImpact, forward);
+		axisLength = axis.GetLength();
+		if (axisLength < 0.001f)
+		{
+			return; // degenerate case, skip
+		}
+	}
+	axis /= axisLength; // normalize
+
+	// Build the world-space additive rotation
+	Quat worldAdditiveRotation = Quat::MakeFromAxisAngleDegrees(axis, COLLISION_FLINCH_DEGREES);
+
+	// Convert to control-frame-local rotation:
+	// localAdditive = inverse(controlRot) * worldAdditive * controlRot
+	Quat controlRotInv = m_controlFrameRotation.GetInverse();
+	m_collisionAdditiveRotation = controlRotInv * worldAdditiveRotation * m_controlFrameRotation;
+	m_collisionAdditiveRotation.Normalize();
+
+	// Reset alpha to 1 (new collision overrides any in-progress blend-out)
+	m_collisionAdditiveAlpha = 1.f;
+}
+
+void PlayerShip::BlendOutCollisionAdditiveRotation(InputOutputParams& io_params)
+{
+	if (m_collisionAdditiveAlpha > 0.f)
+	{
+		Quat additiveThisFrame = Quat::Slerp(Quat::IDENTITY, m_collisionAdditiveRotation, m_collisionAdditiveAlpha);
+		io_params.m_bodyTargetLocalRotation = io_params.m_bodyTargetLocalRotation * additiveThisFrame;
+		io_params.m_bodyTargetLocalRotation.Normalize();
+
+		m_collisionAdditiveAlpha -= io_params.m_deltaSeconds * COLLISION_FLINCH_BLEND_OUT_SPEED;
+		if (m_collisionAdditiveAlpha < 0.f)
+		{
+			m_collisionAdditiveAlpha = 0.f;
+		}
+	}
+}
+
+void PlayerShip::UpdateBarrelRoll(InputOutputParams& io_params)
+{
+	// Tick cooldown
+	if (m_barrelRollCooldownTimer > 0.f)
+	{
+		m_barrelRollCooldownTimer -= io_params.m_deltaSeconds;
+	}
+
+	if (!m_isBarrelRolling)
+	{
+		return;
+	}
+
+	// dodgeSign: +360 (right/D) -> -1 (negative Y = right), -360 (left/A) -> +1 (positive Y = left)
+	float dodgeSign = (m_barrelRollTotalAngle > 0.f) ? -1.f : 1.f;
+
+	float prevElapsed = m_barrelRollElapsedTime;
+	m_barrelRollElapsedTime += io_params.m_deltaSeconds;
+	float fraction = GetClampedZeroToOne(m_barrelRollElapsedTime / m_definition->m_barrelRollDuration);
+
+	// Rotation: cumulative angle around body-local forward
+	float currentAngleDegrees = m_barrelRollTotalAngle * fraction;
+	io_params.m_bodyTargetLocalRotation = io_params.m_bodyTargetLocalRotation * Quat::MakeFromAxisAngleDegrees(Vec3::FORWARD, currentAngleDegrees);
+	io_params.m_bodyTargetLocalRotation.Normalize();
+
+	// Visual body lateral offset: sine curve (0 -> peak -> 0)
+	float offsetY = dodgeSign * m_definition->m_barrelRollBodyOffset * SinDegrees(fraction * 180.f);
+	io_params.m_bodyTargetLocalPosition.y += offsetY;
+
+	// Lateral velocity impulse (first frame only, UpdateLateralDrag will dissipate it) // or put it where activate the ability
+	if (prevElapsed == 0.f)
+	{
+		Vec3 worldDodgeDir = m_controlFrameRotation.RotateVector(Vec3(0.f, dodgeSign, 0.f)).GetNormalized();
+		m_velocity += worldDodgeDir * m_definition->m_barrelRollLateralSpeed;
+	}
+	
+	if (fraction >= 1.f)
+	{
+		m_isBarrelRolling = false;
+		m_barrelRollCooldownTimer = m_definition->m_barrelRollCooldown;
+	}
 }
 
 float PlayerShip::GetDeltaRollDegrees_Uniform(float deltaSeconds)
@@ -465,6 +724,54 @@ float PlayerShip::GetDeltaRollDegrees_Interp(float deltaSeconds)
 
 	float deltaMove = shortestDisp * GetClampedZeroToOne(deltaSeconds * ROLL_TO_HORIZON_INTERP_SPEED);
 	return deltaMove;
+}
+
+void PlayerShip::UpdateDebugInput()
+{
+	UpdateDebugPlayerAttributes();
+}
+
+void PlayerShip::UpdateDebugPlayerAttributes()
+{
+	bool changed = false;
+
+	if (g_theInput->WasKeyJustPressed('1'))
+	{
+		m_playerStrength = 0;
+		changed = true;
+	}
+	else if (g_theInput->WasKeyJustPressed('2'))
+	{
+		m_playerStrength = 1;
+		changed = true;
+	}
+	else if (g_theInput->WasKeyJustPressed('3'))
+	{
+		m_playerStrength = 2;
+		changed = true;
+	}
+	else if (g_theInput->WasKeyJustPressed('4'))
+	{
+		m_playerStrength = 3;
+		changed = true;
+	}
+	else if (g_theInput->WasKeyJustPressed('5'))
+	{
+		m_playerStrength = 4;
+		changed = true;
+	}
+
+	if (g_theInput->WasKeyJustPressed('0'))
+	{
+		m_playerTier = (m_playerTier == 0) ? 1 : 0;
+		changed = true;
+	}
+
+	if (changed)
+	{
+		DebugAddMessage(
+			Stringf("Player Tier: %d  |  Player Strength: %d", m_playerTier, m_playerStrength), 3.f, Rgba8::BLUE);
+	}
 }
 
 Mat44 PlayerShip::GetShipModelToWorldTransform() const
@@ -554,11 +861,14 @@ void PlayerShip::UpdateFiring(InputOutputParams& io_params)
 		bulletDef.m_startPos = cannonWorldPos;
 		bulletDef.m_velocity = (aimedWorldPos - cannonWorldPos).GetNormalized() * m_definition->m_cannonSpeed;
 		bulletDef.m_lifetime = m_definition->m_cannonLifetime;
+		bulletDef.m_explosionRadius = m_definition->m_cannonExplosionRadius;
 		bulletDef.m_color = currentCannonColor;
 		bulletDef.m_intensityMultiplier = currentCannonIntensity;
 		bulletDef.m_lengthMultiplier = 2.f;
 		bulletDef.m_thicknessMultiplier = 1.f;
 		bulletDef.m_deltaDensity = m_definition->m_cannonDeltaDensity;
+		bulletDef.m_tier = GetPlayerTier();
+		bulletDef.m_strength = GetPlayerStrength();
 
 		m_world->m_projectileSystem->SpawnProjectile(bulletDef);
 
@@ -566,4 +876,52 @@ void PlayerShip::UpdateFiring(InputOutputParams& io_params)
 		m_timeSinceLastFire = 0.0f;
 		m_currentCannonIndex = (m_currentCannonIndex + 1) % m_definition->m_numCannons;
 	}
+}
+
+void PlayerShip::UpdateSonarScanning(InputOutputParams& io_params)
+{
+	m_timeSinceLastScan += io_params.m_deltaSeconds;
+
+	if (g_theInput->WasKeyJustPressed(KEYCODE_E) && m_timeSinceLastScan >= m_definition->m_sonarScanDuration)
+	{
+		m_timeSinceLastScan = 0.0f;
+	}
+
+	float alpha = m_timeSinceLastScan / m_definition->m_sonarScanDuration;
+
+
+	SonarParams params;
+	params.m_sonarCenter = m_controlFramePosition;
+	Rgba8::RED.GetAsFloats(params.m_sonarColor);
+	params.m_sonarThickness = 3.f;
+	if (alpha >= 1.f)
+	{
+		params.m_sonarInnerRadius = -1.f;
+	}
+	else
+	{
+		params.m_sonarInnerRadius = m_definition->m_sonarMaxRadius * SmoothStep3(alpha);
+	}
+
+	m_world->UpdateSonar(params);
+}
+
+int PlayerShip::GetPlayerTier() const
+{
+	return m_playerTier;
+}
+
+int PlayerShip::GetPlayerStrength() const
+{
+	return m_playerStrength;
+}
+
+void PlayerShip::SetPlayerTier(int tier)
+{
+	m_playerTier = tier;
+}
+
+void PlayerShip::SetPlayerStrength(int strength)
+{
+	m_playerStrength = strength;
 }

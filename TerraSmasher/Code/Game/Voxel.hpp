@@ -4,6 +4,9 @@
 #include <stdint.h>
 
 
+
+struct ToughnessProfile;
+
 class Voxel
 {
 public:
@@ -11,11 +14,18 @@ public:
 	uint8_t m_materialID1 = 0;
 	uint8_t m_materialID2 = 0;
 	uint8_t m_blendValue = 0; // 0~255 float 0.f~1.f
+	uint8_t m_damage = 0;
+	uint8_t m_padding0 = 0;
+	uint8_t m_padding1 = 0;
+	uint8_t m_padding2 = 0;
+
 
 	// State Data (Gameplay)
 
 public:
 	static const Voxel AIR;
+
+	static constexpr uint8_t INVALID_MATERIAL_ID = (uint8_t)(-1);
 
 	// Density >= ISO_VALUE is solid, is meaningful
 	static constexpr float	ISO_FLOAT_VALUE = 0.5f;
@@ -25,7 +35,7 @@ public:
 	static constexpr float	FULLY_EMPTY_FLOAT = 0.f;
 
 	// Tweak This Value to have a good result
-	static constexpr float	SDF_NORM_THRESHOLD = 0.8f; 
+	static constexpr float	SDF_NORM_THRESHOLD = 0.8661f; // half of sqrt(3)
 
 	// SDF Settings:  #ToDo: Test which one is better
 	// Notes: SDF_NORM_THRESHOLD 1.f is good for Surface nets, 2.f is good for dual contouring
@@ -58,6 +68,18 @@ public:
 			a.m_materialID1 == b.m_materialID1 &&
 			a.m_materialID2 == b.m_materialID2 &&
 			a.m_blendValue == b.m_blendValue;
+	}
+
+	ToughnessProfile GetToughnessProfile() const;
+
+	static bool IsInDamageRegion(float signedDistance) 
+	{
+		return signedDistance < -SDF_NORM_THRESHOLD;
+	}
+
+	static bool IsInAffectedRegion(float signedDistance) 
+	{
+		return signedDistance < SDF_NORM_THRESHOLD;
 	}
 };
 

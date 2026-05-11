@@ -2,6 +2,7 @@
 #include "Engine/Math/Vec2.hpp"
 #include "Engine/Math/Vec3.hpp"
 #include "Engine/Math/Quat.hpp"
+#include "Engine/Math/Mat44.hpp"
 #include <string>
 
 struct ShipSpawnInfo
@@ -29,6 +30,8 @@ struct InputOutputParams
 
 	Vec3 m_prevBodyLocalPosition; // may be changed by some behaviors (current pos)
 	Quat m_prevBodyLocalRotation;
+
+	Mat44 m_prevBodyWorldTransform; // Used for collision check now
 
 	// Result
 	Vec3 m_linearVelocity; // do not read this, m_linearVelocity = m_prevVelocity initially

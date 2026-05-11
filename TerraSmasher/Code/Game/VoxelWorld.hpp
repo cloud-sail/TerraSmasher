@@ -11,6 +11,8 @@ class DataChunk;
 class SDFShape;
 class SDF;
 struct Plane3;
+struct StrikeResult;
+struct StrikeContext;
 
 namespace VoxelWorldUtils
 {
@@ -120,6 +122,13 @@ public:
 	// Rule: gradually decrease density down to (255 - sdf_density) limit
 	// deltaDensity: amount of density to decrease per operation
 	bool CarveWithSDF(SDF const* sdf, uint8_t deltaDensity, IntBox3& out_region);
+
+	// Carve operation with per-material volume tracking
+	// out_materialVolumes: caller provides a pre-sized vector (size = num materials), function accumulates into it
+	bool CarveWithSDFTracked(SDF const* sdf, uint8_t deltaDensity, IntBox3& out_region, std::vector<float>& out_materialVolumes);
+
+	StrikeResult StrikeWithSDFTracked(SDF const* sdf, StrikeContext const& ctx);
+
 
 	// Flatten operation (constrain voxels to a plane)
 	// Rule: Gradually modify voxel densities to match the signed distance to the plane

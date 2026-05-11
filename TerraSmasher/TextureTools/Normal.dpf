@@ -1,0 +1,1 @@
+--format bc5 --quality normal --mips --mip-filter kaiser --no-mip-gamma-correct --no-mip-pre-alpha --save-flip-y --zcmp 5

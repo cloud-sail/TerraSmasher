@@ -1,0 +1,13 @@
+<StaticModelInfo
+    objFile = "Data/Models/Collectibles/gold_bar.obj"
+    shader = "Data/Shaders/BlinnPhong"
+    diffuseMap = "Data/Models/Collectibles/gold_bar_d.png"
+    normalMap = "Data/Models/Collectibles/gold_bar_n.png"
+    specGlossEmitMap = ""
+    unitsPerMeter = "1"
+    x="forward"
+    y="left"
+    z="up"
+    frontCounterClockwise="true"
+    translation="0,0,-0.1105"
+/>

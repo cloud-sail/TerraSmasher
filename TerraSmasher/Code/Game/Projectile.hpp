@@ -20,7 +20,11 @@ struct ProjectileDefinition
 	float	m_thicknessMultiplier = 1.0f;
 	float	m_lengthMultiplier = 1.0f;
 
-	uint8_t m_deltaDensity = 255;
+	uint8_t m_deltaDensity = 255; // If use hardness system, this parameter will not be used
+
+	int m_tier = 0;
+	int m_strength = 0;
+
 };
 
 
@@ -52,6 +56,9 @@ private:
 	float m_lengthMultiplier;
 
 	uint8_t m_deltaDensity;
+
+	int m_tier = 0;
+	int m_strength = 0;
 
 	bool m_isDead = false;
 };

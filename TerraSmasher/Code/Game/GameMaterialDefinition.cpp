@@ -13,14 +13,14 @@ bool GameMaterialDefinition::LoadFromXmlElement(XmlElement const& element)
 {
 	m_name = ParseXmlAttribute(element, "name", m_name);
 
-	XmlElement const* hudElement = element.FirstChildElement("Visuals");
+	XmlElement const* visualsElement = element.FirstChildElement("Visuals");
 
-	GUARANTEE_OR_DIE(hudElement != nullptr, "No Visuals under GameMaterialDefinition!");
+	GUARANTEE_OR_DIE(visualsElement != nullptr, "No Visuals under GameMaterialDefinition!");
 
-	std::string albedoFilePath = ParseXmlAttribute(*hudElement, "albedo", "");
-	std::string normalFilePath = ParseXmlAttribute(*hudElement, "normal", "");
-	std::string ormhFilePath = ParseXmlAttribute(*hudElement, "ormh", "");
-	std::string emissiveFilePath = ParseXmlAttribute(*hudElement, "emissive", "");
+	std::string albedoFilePath = ParseXmlAttribute(*visualsElement, "albedo", "");
+	std::string normalFilePath = ParseXmlAttribute(*visualsElement, "normal", "");
+	std::string ormhFilePath = ParseXmlAttribute(*visualsElement, "ormh", "");
+	std::string emissiveFilePath = ParseXmlAttribute(*visualsElement, "emissive", "");
 
 	Texture* albedoTexture = nullptr;
 	Texture* normalTexture = nullptr;
@@ -49,8 +49,23 @@ bool GameMaterialDefinition::LoadFromXmlElement(XmlElement const& element)
 	m_ormhSrvIndex = g_theRenderer->GetSrvIndexFromLoadedTexture(ormhTexture, DefaultTexture::DefaultORMHMap);
 	m_emissiveSrvIndex = g_theRenderer->GetSrvIndexFromLoadedTexture(emissiveTexture, DefaultTexture::BlackOpaque2D);
 	
-	m_uvScale = ParseXmlAttribute(*hudElement, "uvScale", m_uvScale);
-	m_lowPolyLevel = ParseXmlAttribute(*hudElement, "lowPolyLevel", m_lowPolyLevel);
+	m_uvScale = ParseXmlAttribute(*visualsElement, "uvScale", m_uvScale);
+	m_lowPolyLevel = ParseXmlAttribute(*visualsElement, "lowPolyLevel", m_lowPolyLevel);
+
+	XmlElement const* toughnessElement = element.FirstChildElement("ToughnessProfile");
+
+	GUARANTEE_OR_DIE(toughnessElement != nullptr, "No ToughnessProfile under GameMaterialDefinition!");
+
+	m_tier = ParseXmlAttribute(*toughnessElement, "tier", m_tier);
+	m_strength = ParseXmlAttribute(*toughnessElement, "strength", m_strength);
+
+	// Scoring is optional. Missing element keeps the defaults (0/0 -> no score, no combo).
+	XmlElement const* scoringElement = element.FirstChildElement("Scoring");
+	if (scoringElement != nullptr)
+	{
+		m_scorePerCubicMeter = ParseXmlAttribute(*scoringElement, "scorePerCubicMeter", m_scorePerCubicMeter);
+		m_comboPerCubicMeter = ParseXmlAttribute(*scoringElement, "comboPerCubicMeter", m_comboPerCubicMeter);
+	}
 
 	return true;
 }

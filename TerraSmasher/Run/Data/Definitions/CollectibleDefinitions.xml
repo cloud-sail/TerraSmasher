@@ -1,0 +1,34 @@
+<Definitions>
+	<CollectibleDefinition name="d20" displayName="D20 Dice" model="Data/Models/Collectibles/d20.xml">
+		<LocalAABB mins="-0.4395,-0.4625,-0.5000" maxs="0.4395,0.4625,0.5000"/>
+		<Scoring scoreValue="300.0" comboValue="2.5"/>
+	</CollectibleDefinition>
+	<CollectibleDefinition name="eight_ball" displayName="Eight Ball" model="Data/Models/Collectibles/eight_ball.xml">
+		<LocalAABB mins="-0.5,-0.5,-0.5" maxs="0.5,0.5,0.5"/>
+		<Scoring scoreValue="300.0" comboValue="2.5"/>
+	</CollectibleDefinition>
+	<CollectibleDefinition name="gold_bar" displayName="Gold Bar" model="Data/Models/Collectibles/gold_bar.xml">
+		<LocalAABB mins="-0.5000,-0.2275,-0.1105" maxs="0.5000,0.2275,0.1105"/>
+		<Scoring scoreValue="800.0" comboValue="3.5"/>
+	</CollectibleDefinition>
+	<CollectibleDefinition name="lollipop" displayName="Lollipop" model="Data/Models/Collectibles/lollipop.xml">
+		<LocalAABB mins="-0.0650,-0.2440,-0.5000" maxs="0.0650,0.2440,0.5000"/>
+		<Scoring scoreValue="200.0" comboValue="2.0"/>
+	</CollectibleDefinition>
+	<CollectibleDefinition name="macaron" displayName="Macaron" model="Data/Models/Collectibles/macaron.xml">
+		<LocalAABB mins="-0.4995,-0.5000,-0.3830" maxs="0.4995,0.5000,0.3830"/>
+		<Scoring scoreValue="200.0" comboValue="2.0"/>
+	</CollectibleDefinition>
+	<CollectibleDefinition name="rubber_duck" displayName="Rubber Duck" model="Data/Models/Collectibles/rubber_duck.xml">
+		<LocalAABB mins="-0.5000,-0.3840,-0.4190" maxs="0.5000,0.3840,0.4190"/>
+		<Scoring scoreValue="300.0" comboValue="2.5"/>
+	</CollectibleDefinition>
+	<CollectibleDefinition name="rubber_duck_hat" displayName="Rubber Duck Hat" model="Data/Models/Collectibles/rubber_duck_hat.xml">
+		<LocalAABB mins="-0.5000,-0.3330,-0.4125" maxs="0.5000,0.3330,0.4125"/>
+		<Scoring scoreValue="300.0" comboValue="2.5"/>
+	</CollectibleDefinition>
+	<CollectibleDefinition name="watermelon" displayName="Watermelon" model="Data/Models/Collectibles/watermelon.xml">
+		<LocalAABB mins="-0.1290,-0.5000,-0.2335" maxs="0.1290,0.5000,0.2335"/>
+		<Scoring scoreValue="200.0" comboValue="2.0"/>
+	</CollectibleDefinition>
+</Definitions>

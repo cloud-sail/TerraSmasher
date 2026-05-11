@@ -1,0 +1,82 @@
+<SDFScene>
+    <SDFShape type="Box" fillMethod="Z_AXIS_GRADIENT" materialID1="0" materialID2="10" uniformBlendValue="0" gradientMinZFactor="0.486" gradientMaxZFactor="0.53200001" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="300.000,256.000,256.000" rotation="0.000,0.000,0.000" scale="2"/>
+        <Properties halfExtents="5.000,5.000,5.000"/>
+    </SDFShape>
+    <SDFShape type="Box" fillMethod="Z_AXIS_GRADIENT" materialID1="4" materialID2="8" uniformBlendValue="0" gradientMinZFactor="0.47999999" gradientMaxZFactor="0.52399999" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="300.000,236.000,256.000" rotation="0.000,0.000,0.000" scale="2"/>
+        <Properties halfExtents="5.000,5.000,5.000"/>
+    </SDFShape>
+    <SDFShape type="Box" fillMethod="Z_AXIS_GRADIENT" materialID1="1" materialID2="3" uniformBlendValue="0" gradientMinZFactor="0.47999999" gradientMaxZFactor="0.51899999" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="300.000,276.000,256.000" rotation="0.000,0.000,0.000" scale="2"/>
+        <Properties halfExtents="5.000,5.000,5.000"/>
+    </SDFShape>
+    <SDFShape type="Sphere" fillMethod="DISTANCE_GRADIENT" materialID1="11" materialID2="7" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-4" gradientMaxDist="-2">
+        <Transform position="300.000,256.000,280.000" rotation="0.000,0.000,0.000" scale="2"/>
+        <Properties radius="5"/>
+    </SDFShape>
+    <SDFShape type="DensityCloud" fillMethod="UNIFORM_BLEND" materialID1="2" materialID2="0" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="230.300,350.400,256.000" rotation="0.000,0.000,0.000" scale="1"/>
+        <Properties filePath="Data\Models\bunny.dcloud"/>
+    </SDFShape>
+    <SDFShape type="CutHollowSphere" fillMethod="Z_AXIS_GRADIENT" materialID1="5" materialID2="9" uniformBlendValue="0" gradientMinZFactor="0.66799998" gradientMaxZFactor="0.72500002" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="300.000,276.000,280.000" rotation="30.600,0.000,0.000" scale="2"/>
+        <Properties radius="5" cutHeight="2" thickness="1"/>
+    </SDFShape>
+    <SDFShape type="DensityCloud" fillMethod="Z_AXIS_GRADIENT" materialID1="10" materialID2="7" uniformBlendValue="0" gradientMinZFactor="0.49900001" gradientMaxZFactor="0.565" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="111.500,256.000,210.100" rotation="0.000,0.000,0.000" scale="1"/>
+        <Properties filePath="Data\Models\rubber_toy.dcloud"/>
+    </SDFShape>
+    <SDFShape type="Torus" fillMethod="DISTANCE_GRADIENT" materialID1="7" materialID2="4" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-4.1999998" gradientMaxDist="-2.3">
+        <Transform position="170.100,100.200,256.000" rotation="0.000,57.300,120.300" scale="2.5999999"/>
+        <Properties majorRadius="17.129999" minorRadius="4.54"/>
+    </SDFShape>
+    <SDFShape type="Sphere" fillMethod="DISTANCE_GRADIENT" materialID1="8" materialID2="7" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-4.8000002" gradientMaxDist="-3.8">
+        <Transform position="171.100,100.200,256.000" rotation="0.000,0.000,0.000" scale="3.0999999"/>
+        <Properties radius="5"/>
+    </SDFShape>
+    <SDFShape type="Box" fillMethod="DISTANCE_GRADIENT" materialID1="7" materialID2="6" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-4.8000002" gradientMaxDist="-3.9000001">
+        <Transform position="230.000,160.000,320.000" rotation="0.000,45.000,45.000" scale="3.5"/>
+        <Properties halfExtents="5.000,5.000,5.000"/>
+    </SDFShape>
+    <SDFShape type="Box" fillMethod="UNIFORM_BLEND" materialID1="0" materialID2="0" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="230.000,160.000,320.000" rotation="0.000,45.000,45.000" scale="1.4"/>
+        <Properties halfExtents="5.000,5.000,5.000"/>
+    </SDFShape>
+    <SDFShape type="Sphere" fillMethod="UNIFORM_BLEND" materialID1="11" materialID2="0" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="256.000,256.000,200.000" rotation="0.000,0.000,0.000" scale="5"/>
+        <Properties radius="5"/>
+    </SDFShape>
+    <SDFShape type="Capsule" fillMethod="UNIFORM_BLEND" materialID1="1" materialID2="0" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="256.000,256.000,200.000" rotation="0.000,0.000,143.400" scale="5.5"/>
+        <Properties pointA="0.000,0.000,-6.000" pointB="0.000,0.000,6.000" radius="0.74000001"/>
+    </SDFShape>
+    <SDFShape type="Sphere" fillMethod="UNIFORM_BLEND" materialID1="7" materialID2="0" uniformBlendValue="0" gradientMinZFactor="0.89999998" gradientMaxZFactor="0.94999999" gradientMinDist="-2" gradientMaxDist="-1">
+        <Transform position="256.000,256.000,200.000" rotation="0.000,0.000,0.000" scale="2"/>
+        <Properties radius="5"/>
+    </SDFShape>
+    <Collectible definition="watermelon">
+        <Transform position="208.500,80.800,256.000" rotation="-96.000,20.400,72.000" scale="18.200001"/>
+    </Collectible>
+    <Collectible definition="lollipop">
+        <Transform position="175.100,112.200,258.000" rotation="69.600,0.000,0.000" scale="9"/>
+    </Collectible>
+    <Collectible definition="d20">
+        <Transform position="230.000,160.000,320.000" rotation="0.000,0.000,0.000" scale="9.5"/>
+    </Collectible>
+    <Collectible definition="macaron">
+        <Transform position="256.000,256.000,200.000" rotation="0.000,0.000,0.000" scale="10.6"/>
+    </Collectible>
+    <Collectible definition="rubber_duck">
+        <Transform position="252.400,366.700,288.600" rotation="-11.700,-16.200,18.300" scale="9.6000004"/>
+    </Collectible>
+    <Collectible definition="rubber_duck_hat">
+        <Transform position="245.200,367.700,267.400" rotation="0.000,0.000,0.000" scale="12.4"/>
+    </Collectible>
+    <Collectible definition="eight_ball">
+        <Transform position="135.000,289.500,224.300" rotation="0.000,0.000,0.000" scale="9.5"/>
+    </Collectible>
+    <Collectible definition="gold_bar">
+        <Transform position="130.000,119.000,256.000" rotation="0.000,77.400,12.600" scale="25"/>
+    </Collectible>
+</SDFScene>

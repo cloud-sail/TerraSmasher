@@ -196,11 +196,15 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="BloomEffect.cpp" />
     <ClCompile Include="ChunkRenderManager.cpp" />
+    <ClCompile Include="CollectibleDefinition.cpp" />
+    <ClCompile Include="ComboSystem.cpp" />
     <ClCompile Include="CubeTables.cpp" />
     <ClCompile Include="DataChunk.cpp" />
     <ClCompile Include="DensityCloud.cpp" />
     <ClCompile Include="DualContouring1.cpp" />
     <ClCompile Include="DualContouring2.cpp" />
+    <ClCompile Include="DebrisSystem.cpp" />
+    <ClCompile Include="ExplosionSystem.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCommon.cpp" />
     <ClCompile Include="GameMaterialDefinition.cpp" />
@@ -221,12 +225,14 @@
     <ClCompile Include="MeshChunk.cpp" />
     <ClCompile Include="SDF.cpp" />
     <ClCompile Include="SdfPrimitives.cpp" />
+    <ClCompile Include="ScoreSystem.cpp" />
     <ClCompile Include="ShipBehaviors.cpp" />
     <ClCompile Include="ShipDefinition.cpp" />
     <ClCompile Include="ShipTypes.cpp" />
     <ClCompile Include="SpectatorCamera.cpp" />
     <ClCompile Include="Voxel.cpp" />
     <ClCompile Include="VoxelBlockPool.cpp" />
+    <ClCompile Include="VoxelBreakSystem.cpp" />
     <ClCompile Include="VoxelBrush.cpp" />
     <ClCompile Include="VoxelBufferPool.cpp" />
     <ClCompile Include="VoxelMesher.cpp" />
@@ -239,12 +245,16 @@
     <ClInclude Include="App.hpp" />
     <ClInclude Include="BloomEffect.hpp" />
     <ClInclude Include="ChunkRenderManager.hpp" />
+    <ClInclude Include="CollectibleDefinition.hpp" />
+    <ClInclude Include="ComboSystem.hpp" />
     <ClInclude Include="CubeTables.hpp" />
     <ClInclude Include="DataChunk.hpp" />
     <ClInclude Include="DensityCloud.hpp" />
     <ClInclude Include="DualContouring1.hpp" />
     <ClInclude Include="DualContouring2.hpp" />
     <ClInclude Include="EngineBuildPreferences.hpp" />
+    <ClInclude Include="DebrisSystem.hpp" />
+    <ClInclude Include="ExplosionSystem.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="GameCommon.hpp" />
     <ClInclude Include="GameMaterialDefinition.hpp" />
@@ -265,12 +275,14 @@
     <ClInclude Include="MeshChunk.hpp" />
     <ClInclude Include="SDF.hpp" />
     <ClInclude Include="SdfPrimitives.hpp" />
+    <ClInclude Include="ScoreSystem.hpp" />
     <ClInclude Include="ShipBehaviors.hpp" />
     <ClInclude Include="ShipDefinition.hpp" />
     <ClInclude Include="ShipTypes.hpp" />
     <ClInclude Include="SpectatorCamera.hpp" />
     <ClInclude Include="Voxel.hpp" />
     <ClInclude Include="VoxelBlockPool.hpp" />
+    <ClInclude Include="VoxelBreakSystem.hpp" />
     <ClInclude Include="VoxelBrush.hpp" />
     <ClInclude Include="VoxelBufferPool.hpp" />
     <ClInclude Include="VoxelMesher.hpp" />
@@ -280,11 +292,20 @@
     <ClInclude Include="WorldCommon.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="..\..\Run\Data\Definitions\CollectibleDefinitions.xml" />
     <Xml Include="..\..\Run\Data\Definitions\GameMaterialDefinitions.xml" />
     <Xml Include="..\..\Run\Data\Definitions\GameMaterialDefinitions_dds.xml" />
     <Xml Include="..\..\Run\Data\Definitions\GameMaterialDefinitions_dds_linear.xml" />
     <Xml Include="..\..\Run\Data\Definitions\ShipDefinitions.xml" />
     <Xml Include="..\..\Run\Data\GameConfig.xml" />
+    <Xml Include="..\..\Run\Data\Models\Collectibles\d20.xml" />
+    <Xml Include="..\..\Run\Data\Models\Collectibles\eight_ball.xml" />
+    <Xml Include="..\..\Run\Data\Models\Collectibles\gold_bar.xml" />
+    <Xml Include="..\..\Run\Data\Models\Collectibles\lollipop.xml" />
+    <Xml Include="..\..\Run\Data\Models\Collectibles\macaron.xml" />
+    <Xml Include="..\..\Run\Data\Models\Collectibles\rubber_duck.xml" />
+    <Xml Include="..\..\Run\Data\Models\Collectibles\rubber_duck_hat.xml" />
+    <Xml Include="..\..\Run\Data\Models\Collectibles\watermelon.xml" />
     <Xml Include="..\..\Run\Data\Models\Craft\Craft.xml" />
     <Xml Include="..\..\Run\Data\Scenes\ExampleScene.xml" />
   </ItemGroup>

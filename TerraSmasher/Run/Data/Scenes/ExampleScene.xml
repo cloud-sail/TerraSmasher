@@ -11,4 +11,28 @@
         <Transform position="256.000,256.000,256.000" rotation="0.000,0.000,0.000" scale="1"/>
         <Properties filePath="Data/Models/rubber_toy.dcloud"/>
     </SDFShape>
+    <Collectible definition="d20">
+        <Transform position="250.600,200.000,262.500" rotation="0.000,0.000,0.000" scale="11.8"/>
+    </Collectible>
+    <Collectible definition="rubber_duck">
+        <Transform position="266.900,200.000,263.200" rotation="0.000,-31.200,0.000" scale="8"/>
+    </Collectible>
+    <Collectible definition="gold_bar">
+        <Transform position="256.000,200.000,236.100" rotation="0.000,45.000,0.000" scale="11.8"/>
+    </Collectible>
+    <Collectible definition="eight_ball">
+        <Transform position="299.400,287.300,293.000" rotation="0.000,135.600,9.000" scale="8.8000002"/>
+    </Collectible>
+    <Collectible definition="lollipop">
+        <Transform position="276.300,278.600,274.700" rotation="83.100,123.900,0.000" scale="15.4"/>
+    </Collectible>
+    <Collectible definition="macaron">
+        <Transform position="256.000,341.500,260.800" rotation="-48.000,43.200,0.000" scale="8.3000002"/>
+    </Collectible>
+    <Collectible definition="rubber_duck_hat">
+        <Transform position="256.200,359.800,261.300" rotation="0.000,0.000,0.000" scale="9"/>
+    </Collectible>
+    <Collectible definition="watermelon">
+        <Transform position="280.200,292.300,271.400" rotation="69.600,20.700,34.800" scale="19.1"/>
+    </Collectible>
 </SDFScene>

@@ -1,7 +1,8 @@
 #include "Game/Voxel.hpp"
 #include "Engine/Math/Quantization.hpp"
 #include "Engine/Math/MathUtils.hpp"
-
+#include "GameMaterialDefinition.hpp"
+#include "Game/VoxelBreakSystem.hpp"
 
 const Voxel Voxel::AIR{ 0, 0, 0, 0 };
 
@@ -105,3 +106,30 @@ Voxel Voxel::MergeFromEightChildren(std::array<Voxel, 8> const& childVoxels)
 
 	return merged;
 }
+
+ToughnessProfile Voxel::GetToughnessProfile() const
+{
+	constexpr uint8_t MAT2_NEGLIGIBLE_BELOW = 30;
+	constexpr uint8_t MAT1_NEGLIGIBLE_ABOVE = 225;
+
+	if (m_blendValue < MAT2_NEGLIGIBLE_BELOW)
+	{
+		GameMaterialDefinition const* materialDef = GameMaterialDefinition::GetByMatID(m_materialID1);
+		return { materialDef->m_tier, materialDef->m_strength };
+	}
+
+	if (m_blendValue > MAT1_NEGLIGIBLE_ABOVE)
+	{
+		GameMaterialDefinition const* materialDef = GameMaterialDefinition::GetByMatID(m_materialID2);
+		return { materialDef->m_tier, materialDef->m_strength };
+	}
+
+	GameMaterialDefinition const* m1 = GameMaterialDefinition::GetByMatID(m_materialID1);
+	GameMaterialDefinition const* m2 = GameMaterialDefinition::GetByMatID(m_materialID2);
+
+	ToughnessProfile toughness1 = { m1->m_tier, m1->m_strength };
+	ToughnessProfile toughness2 = { m2->m_tier, m2->m_strength };
+
+	return toughness1.IsLessDurableThan(toughness2) ? toughness1 : toughness2;
+}
+

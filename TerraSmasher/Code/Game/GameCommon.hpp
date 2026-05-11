@@ -128,3 +128,69 @@ struct UnlitEmissiveResources
 	float emissiveStrength = 1.0f;
 };
 
+struct CollectibleRenderResources
+{
+	uint32_t diffuseTextureIndex = INVALID_INDEX_U32;
+	uint32_t normalTextureIndex = INVALID_INDEX_U32;
+	uint32_t specGlossEmitTextureIndex = INVALID_INDEX_U32;
+	uint32_t sceneDepthTextureIndex = INVALID_INDEX_U32;
+
+	uint32_t engineConstantsIndex = INVALID_INDEX_U32;
+	uint32_t cameraConstantsIndex = INVALID_INDEX_U32;
+	uint32_t modelConstantsIndex = INVALID_INDEX_U32;
+	uint32_t lightConstantsIndex = INVALID_INDEX_U32;
+
+	float sonarHighlightAlpha = 0.f;
+	float padding[3] = {};
+};
+
+// Mirrors HLSL ComboMeterRenderResources cbuffer (Common/Resources.hlsli).
+// 48 bytes total (3 16-byte chunks); the trailing pads keep the cbuffer 16-byte aligned.
+struct ComboMeterRenderResources
+{
+	uint32_t cameraConstantsIndex = INVALID_INDEX_U32;
+	uint32_t modelConstantsIndex  = INVALID_INDEX_U32;
+
+	float    progress    = 0.f; // 0..1
+	float    innerRadius = 0.f; // 0..0.5 (UV space, in the un-expanded image)
+	float    outerRadius = 0.f; // 0..0.5
+
+	// Fake-3D tilt (FakePerspective-style). 0 means no tilt; identity output when insetAmount == 1.
+	float    yRotDegrees = 0.f; // rotation around Y axis (head-turn left/right)
+	float    xRotDegrees = 0.f; // rotation around X axis (head-nod up/down)
+	float    fovDegrees  = 60.f; // virtual camera FOV; smaller = milder perspective
+
+	// 0 = max expansion (quad fully grown so a tilted projection never clips).
+	// 1 = no expansion (un-expanded quad); tilt projections may clip at quad edges.
+	// The VS does the expansion itself using baseSize + insetAmount + fov, so C++ never has to
+	// recompute the expansion -- it just builds the un-expanded quad and reports baseSize here.
+	float    insetAmount = 0.f;
+
+	// Side length of the un-expanded quad in screen pixels (square quad). The VS expands the
+	// 4 corners outward by (centeredUV * baseSize * tanHalfFov * (1 - insetAmount)), keeping
+	// the quad-expansion math co-located with the perspective math factor.
+	float    baseSize = 0.f;
+
+	float    pad1 = 0.f;
+	float    pad2 = 0.f;
+};
+
+struct SonarScanResources
+{
+	uint32_t    cameraConstantsIndex = INVALID_INDEX_U32;
+	uint32_t    sceneTextureSRV = INVALID_INDEX_U32;
+	uint32_t    depthTextureSRV = INVALID_INDEX_U32;
+	uint32_t    outputTextureUAV = INVALID_INDEX_U32;
+
+	Vec3		sonarWorldCenter;
+	float		padding0;
+
+	float		innerRadius = 0.f;
+	float		ringThickness = 1.f;
+	float		padding1[2];
+
+	float		sonarColor[4] = {};
+};
+
+
+

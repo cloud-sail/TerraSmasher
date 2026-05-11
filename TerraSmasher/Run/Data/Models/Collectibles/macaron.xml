@@ -1,0 +1,13 @@
+<StaticModelInfo
+    objFile = "Data/Models/Collectibles/macaron.obj"
+    shader = "Data/Shaders/BlinnPhong"
+    diffuseMap = "Data/Models/Collectibles/macaron_d.png"
+    normalMap = ""
+    specGlossEmitMap = ""
+    unitsPerMeter = "1"
+    x="forward"
+    y="left"
+    z="up"
+    frontCounterClockwise="true"
+    translation="0,0,-0.3830"
+/>

@@ -23,6 +23,7 @@ protected:
 public:
 	CursorMode GetCursorMode() const;
 	float GetDeltaSeconds() const;
+	float GetTotalSeconds() const;
 	int GetFrameCount() const;
 
 protected:
@@ -36,6 +37,7 @@ public:
 public:
 	const Camera& GetCamera() const;
 	Camera& GetCamera();
+	const Camera& GetScreenCamera() const { return m_screenCamera; }
 
 protected:
 	void InitializeCameras();

@@ -32,6 +32,9 @@
     <Filter Include="Gameplay\Ship">
       <UniqueIdentifier>{74b453e7-f742-43ac-b422-0aada76660aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Gameplay\Collectibles">
+      <UniqueIdentifier>{4046ffdc-0211-4ddb-84a8-debb750d5f02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -156,6 +159,24 @@
     </ClCompile>
     <ClCompile Include="Projectile.cpp">
       <Filter>Gameplay\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplosionSystem.cpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="DebrisSystem.cpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="CollectibleDefinition.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ComboSystem.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreSystem.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelBreakSystem.cpp">
+      <Filter>Data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +306,24 @@
     <ClInclude Include="ProjectileSystem.hpp">
       <Filter>Gameplay\Ship</Filter>
     </ClInclude>
+    <ClInclude Include="ExplosionSystem.hpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="DebrisSystem.hpp">
+      <Filter>Gameplay\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="CollectibleDefinition.hpp">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ComboSystem.hpp">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreSystem.hpp">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelBreakSystem.hpp">
+      <Filter>Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Run\Data\GameConfig.xml">
@@ -307,6 +346,33 @@
     </Xml>
     <Xml Include="..\..\Run\Data\Models\Craft\Craft.xml">
       <Filter>Gameplay\Ship</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Models\Collectibles\d20.xml">
+      <Filter>Gameplay\Collectibles</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Models\Collectibles\eight_ball.xml">
+      <Filter>Gameplay\Collectibles</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Models\Collectibles\gold_bar.xml">
+      <Filter>Gameplay\Collectibles</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Models\Collectibles\lollipop.xml">
+      <Filter>Gameplay\Collectibles</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Models\Collectibles\macaron.xml">
+      <Filter>Gameplay\Collectibles</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Models\Collectibles\rubber_duck.xml">
+      <Filter>Gameplay\Collectibles</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Models\Collectibles\rubber_duck_hat.xml">
+      <Filter>Gameplay\Collectibles</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Models\Collectibles\watermelon.xml">
+      <Filter>Gameplay\Collectibles</Filter>
+    </Xml>
+    <Xml Include="..\..\Run\Data\Definitions\CollectibleDefinitions.xml">
+      <Filter>Gameplay\Collectibles</Filter>
     </Xml>
   </ItemGroup>
   <ItemGroup>

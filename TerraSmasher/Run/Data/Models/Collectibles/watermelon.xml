@@ -1,0 +1,13 @@
+<StaticModelInfo
+    objFile = "Data/Models/Collectibles/watermelon.obj"
+    shader = "Data/Shaders/BlinnPhong"
+    diffuseMap = "Data/Models/Collectibles/watermelon_d.png"
+    normalMap = "Data/Models/Collectibles/watermelon_n.png"
+    specGlossEmitMap = ""
+    unitsPerMeter = "1"
+    x="forward"
+    y="left"
+    z="up"
+    frontCounterClockwise="true"
+    translation="0,0,-0.2335"
+/>

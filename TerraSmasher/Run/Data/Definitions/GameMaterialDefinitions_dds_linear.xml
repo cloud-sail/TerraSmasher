@@ -8,6 +8,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+			tier ="1"
+			strength="2"
+		/>
+		<Scoring scorePerCubicMeter="8.0" comboPerCubicMeter="0.0008"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="Grass">
 		<Visuals
@@ -18,6 +23,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="0"
+	        strength="0"
+		/>
+		<Scoring scorePerCubicMeter="2.0" comboPerCubicMeter="0.0005"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="Sand">
 		<Visuals
@@ -28,6 +38,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="0"
+	        strength="0"
+		/>
+		<Scoring scorePerCubicMeter="2.0" comboPerCubicMeter="0.0005"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="Mud">
 		<Visuals
@@ -38,6 +53,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="1"
+	        strength="0"
+		/>
+		<Scoring scorePerCubicMeter="4.0" comboPerCubicMeter="0.0006"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="Lava">
 		<Visuals
@@ -48,6 +68,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="1"
+	        strength="4"
+		/>
+		<Scoring scorePerCubicMeter="15.0" comboPerCubicMeter="0.001"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="Snow">
 		<Visuals
@@ -58,6 +83,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="0"
+	        strength="0"
+		/>
+		<Scoring scorePerCubicMeter="2.0" comboPerCubicMeter="0.0005"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="Wood">
 		<Visuals
@@ -68,6 +98,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="1"
+	        strength="1"
+		/>
+		<Scoring scorePerCubicMeter="5.0" comboPerCubicMeter="0.0007"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="Gold">
 		<Visuals
@@ -78,6 +113,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="0"
+	        strength="0"
+		/>
+		<Scoring scorePerCubicMeter="200.0" comboPerCubicMeter="0.004"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="Obsidian">
 		<Visuals
@@ -88,6 +128,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="3"
+	        strength="0"
+		/>
+		<Scoring scorePerCubicMeter="30.0" comboPerCubicMeter="0.0016"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="SpaceshipPanel">
 		<Visuals
@@ -98,6 +143,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="2"
+	        strength="4"
+		/>
+		<Scoring scorePerCubicMeter="25.0" comboPerCubicMeter="0.0014"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="SulphuricRock">
 		<Visuals
@@ -108,6 +158,11 @@
             uvScale="4.0"
             lowPolyLevel="0.0"
         />
+		<ToughnessProfile
+	        tier ="1"
+	        strength="3"
+		/>
+		<Scoring scorePerCubicMeter="12.0" comboPerCubicMeter="0.001"/>
 	</GameMaterialDefinition>
 	<GameMaterialDefinition name="WhiteMarble">
 		<Visuals
@@ -118,5 +173,10 @@
             uvScale="4.0"
             lowPolyLevel="1.0"
         />
+		<ToughnessProfile
+	        tier ="2"
+	        strength="2"
+		/>
+		<Scoring scorePerCubicMeter="20.0" comboPerCubicMeter="0.0012"/>
 	</GameMaterialDefinition>
 </Definitions>

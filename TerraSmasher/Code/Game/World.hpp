@@ -5,7 +5,11 @@
 #include "Game/ImGuiUtils.hpp"
 #include "Engine/Core/Vertex_PCU.hpp"
 #include "Engine/Input/InputSystem.hpp"
+#include "Game/GameTransform.hpp"
+#include "Engine/Core/XmlUtils.hpp"
 #include "Engine/Math/Plane3.hpp"
+#include "Engine/Math/OBB3.hpp"
+#include "Engine/Math/AABB3.hpp"
 #include <vector>
 #include <unordered_set>
 
@@ -16,7 +20,38 @@ class VoxelWorld;
 class PlayerShip;
 class BloomEffect;
 class ProjectileSystem;
+class ExplosionSystem;
+struct ExplosionDefinition;
+class DebrisSystem;
+struct DebrisDefinition;
+class CollectibleDefinition;
+class ComboSystem;
+class ScoreSystem;
+struct StrikeContext;
+struct StrikeResult;
+//-----------------------------------------------------------------------------------------------
+struct CollectibleInstance
+{
+	CollectibleDefinition const* m_definition = nullptr;
+	GameTransform m_transform;
 
+	// Space Mode runtime state
+	bool m_isCollected = false;
+	AABB3 m_worldAABB;
+	OBB3 m_worldOBB;
+
+	// Sonar highlight
+	float m_sonarHighlightTimer = 0.f;
+	static constexpr float SONAR_HIGHLIGHT_DURATION = 3.f;
+
+	float GetSonarHighlightAlpha() const;
+	Vec3 GetWorldCenter() const;
+
+	void ReadFromXml(XmlElement const& element);
+	void WriteToXml(XmlElement& element) const;
+	void Render(Shader* blinnPhongShader) const;
+	void RenderWithSonar(Shader* collectibleShader, uint32_t sceneDepthSRVIndex, float sonarAlpha) const;
+};
 //-----------------------------------------------------------------------------------------------
 // EDITOR <-> BRUSH <-> SPACE
 
@@ -25,6 +60,15 @@ enum class WorldMode
 	EDITOR,
 	BRUSH,
 	SPACE
+};
+
+
+struct SonarParams
+{
+	Vec3 m_sonarCenter;
+	float m_sonarInnerRadius = 0.f;
+	float m_sonarThickness = 1.f;
+	float m_sonarColor[4] = {};
 };
 
 
@@ -105,24 +149,41 @@ private:
 	void ShowShapeListWindow();
 	void ShowShapePropertiesWindow();
 
+	// Collectible editor
+	void ShowCollectibleListWindow();
+	void ShowCollectiblePropertiesWindow();
+	void RenderCollectibles() const;			// Editor mode: plain BlinnPhong
+	void RenderCollectiblesSpaceMode() const;	// Space mode: with sonar + depth test
+
 	// Scene Save/Load
 	void SaveSceneToXml(const char* filepath);
 	void LoadSceneFromXml(const char* filepath);
 
 	void RenderWorldGrid() const;
 
+	void ClearAllCollectibles();
+
 private:
 	std::vector<SDFShape*> m_sdfShapes;
 	int m_selectedShapeIndex = -1;
+
+	// Collectibles
+	std::vector<CollectibleInstance*> m_collectibles;
+	int m_selectedCollectibleIndex = -1;
 
 	// Editor UI State
 	bool m_showEditorWindow = true;
 	bool m_showShapeListWindow = true;
 	bool m_showPropertiesWindow = true;
+	bool m_showCollectibleListWindow = true;
+	bool m_showCollectiblePropertiesWindow = true;
 
 	// Scene file selector
 	GameFileSelector m_sceneFileSelector;
 	GameFileSelector m_densityCloudFileSelector;
+
+	Shader* m_blinnPhongShader = nullptr;
+	Shader* m_collectibleShader = nullptr;
 
 #pragma endregion
 
@@ -263,12 +324,42 @@ private:
 public:
 	void ResetPlayerShipMouseRotationInput();
 	VoxelRaycastResult3D DoProjectileTrace(Vec3 rayStart, Vec3 rayForwardNormal, float rayLength) const;
-	void ApplyExplosion(Vec3 const& worldPos, float explosionRadius, uint8_t deltaDensity);
+	VoxelRaycastResult3D DoShipTrace(Vec3 rayStart, Vec3 rayForwardNormal, float rayLength) const;
+
+	StrikeResult ApplyStrike(Vec3 const& worldPos, float strikeRadius, StrikeContext const& ctx);
+	void SpawnExplosionVFX(ExplosionDefinition const& def);
+	void SpawnDebrisVFX(DebrisDefinition const& def);
+
+	void ResetMaterialDestroyedVolumes();
+
+	// Collectible collection system
+	void RegisterCollectibles();
+	void CheckCollectibleCollection(AABB3 const& dirtyAABB);
+	void OnCollectibleCollected(CollectibleInstance* item);
+	void UpdateCollectibleSonarHighlights(float deltaSeconds);
+	void RenderCollectibleUI() const;
 
 public:
 	ProjectileSystem* m_projectileSystem = nullptr;
+	ExplosionSystem* m_explosionSystem = nullptr;
+	DebrisSystem* m_debrisSystem = nullptr;
 private:
 	PlayerShip* m_player = nullptr;
+	std::vector<float> m_materialDestroyedVolumes;
+
+	// Combo & scoring (owned). ScoreSystem holds a non-owning pointer to ComboSystem.
+	ComboSystem* m_comboSystem = nullptr;
+	ScoreSystem* m_scoreSystem = nullptr;
+
+	void RenderScoreAndComboUI() const;
+
+	// Collectible collection UI
+	CollectibleInstance* m_lastCollectedItem = nullptr;
+	float m_collectUITimer = 0.f;
+	mutable float m_collectUIRotation = 0.f;
+	std::vector<CollectibleInstance*> m_collectedItems;
+	static constexpr float COLLECT_UI_DURATION = 4.0f;
+	static constexpr float COLLECT_UI_ROTATION_SPEED = 60.f;
 
 #pragma endregion
 
@@ -290,6 +381,8 @@ private:
 	void RenderOpaquePass() const;
 
 	void RenderAdditivePass() const;
+
+	void RenderSonarScanPass() const;
 
 	void RenderBloomPass() const;
 
@@ -320,6 +413,10 @@ private:
 	DescriptorHandle m_postProcessSRV;
 	DescriptorHandle m_postProcessUAV;
 
+	// Collectible-only depth buffer (used when scene depth is bound as SRV)
+	Texture* m_collectibleDepthBuffer = nullptr;
+	DescriptorHandle m_collectibleDSV;
+
 	// Still Using the default depth buffer, because we do not have shadow map to draw
 
 	Shader* m_copyToBackBufferShader = nullptr; 
@@ -327,9 +424,23 @@ private:
 
 public:
 	Shader* m_unlitEmissiveShader = nullptr;
+	Shader* m_comboMeterShader    = nullptr;
 
 private:
 	Shader* m_diffuseShader = nullptr;
 
+//-----------------------------------------------------------------------------------------------
+// DFS2:
+public:
+	void UpdateSonar(SonarParams const& params);
+
+private:
+	Shader* m_sonarScanShader = nullptr;
+
+	SonarParams m_sonarParams;
+
+	//void UpdateTestSonarScanImGui();
+
+	DescriptorHandle m_defaultDepthBufferSRV;
 };
 

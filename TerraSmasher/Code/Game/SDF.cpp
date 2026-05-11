@@ -849,6 +849,11 @@ void SDFShape::AddWorldVerts(std::vector<Vertex_PCU>& worldVerts) const
 
 	Rgba8 color = m_isSelected ? Rgba8(255, 215, 0, 255) : Rgba8(70, 130, 180, 255); // Yellow/Blue
 	m_sdf->AddWorldVerts(worldVerts, color);
+
+	if (m_isSelected)
+	{
+		DebugAddBasis(m_sdf->GetTransform().GetAsMatrix(), 0.f, 2.f, 0.15f, 1.f, 1.f, DebugRenderMode::X_RAY);
+	}
 }
 
 void SDFShape::GeneratePreviewMesh()

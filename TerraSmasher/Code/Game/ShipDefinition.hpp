@@ -1,4 +1,5 @@
 #pragma once
+#include "Engine/Core/Rgba8.hpp"
 #include "Engine/Core/XmlUtils.hpp"
 #include "Engine/Math/MonotonicCurve.hpp"
 #include "Engine/Math/Quat.hpp"
@@ -45,6 +46,19 @@ public:
 	MonotonicCurve m_accelerationCurve; // time ratio (0~1) vs. speed ratio(0~1)
 	MonotonicCurve m_decelerationCurve; // time ratio (0~1) vs. speed ratio(0~1)
 
+	// Collision
+	float m_collisionRadius = 0.8f;
+	float m_collisionBounceCoefficient = 0.3f;  // Normal direction restitution (0=absorb, 1=perfect bounce)
+	float m_collisionFrictionCoefficient = 0.85f; // Tangential speed retention (0=full stop, 1=no friction)
+	// To Fix Ship is a little forward
+
+	// Barrel Roll
+	float m_barrelRollDuration = 0.5f;   // seconds for a full 360 roll
+	float m_barrelRollCooldown = 2.0f;   // seconds between rolls
+	float m_barrelRollBodyOffset = 1.0f;      // max lateral body offset during roll
+	float m_barrelRollLateralSpeed = 5.0f;    // instantaneous lateral speed impulse
+
+
 	// Camera
 	float m_minCameraFOV = 60.f;
 	float m_maxCameraFOV = 78.f;
@@ -81,6 +95,12 @@ public:
 	std::vector<Vec3> m_cannonOffsets;
 	std::vector<Rgba8> m_cannonColors;
 	std::vector<float> m_cannonIntensities;
+
+	// Sonar
+	Rgba8 m_sonarColor = Rgba8::MAGENTA;
+	float m_sonarMaxRadius = 10.f;
+	float m_sonarScanDuration = 3.f;
+	float m_sonarScanInterval = 100.f;
 
 public:
 	// model,  The expected size is 2^3, pivot is defined by obj file

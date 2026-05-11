@@ -54,8 +54,12 @@ public:
 	float m_uvScale = 1.f;
 	float m_lowPolyLevel = 0.f;
 
+	// Toughness Profile
+	int m_tier = 0;
+	int m_strength = 0;
 
-
-
+	// Scoring (per cubic meter destroyed). 0 means this material does not contribute to score/combo.
+	float m_scorePerCubicMeter = 0.f;
+	float m_comboPerCubicMeter = 0.f;
 };
 
